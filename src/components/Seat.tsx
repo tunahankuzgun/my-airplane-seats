@@ -1,3 +1,4 @@
+import NotificationBox from '@/components/NotificationBox';
 import UserForm, { UserFormData } from '@/components/UserForm';
 import React, { useEffect, useRef, useState } from "react";
 
@@ -116,23 +117,28 @@ const Seat: React.FC = () => {
         seat?.status == "dolu" ? setHoveredSeat(seat) : setHoveredSeat(null);
     };
 
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
+    const [boxType, setBoxType] = useState("error");
+
     const handleSeatClick = (seatId: string) => {
         const seatToClick = seats.find((seat) => seat.id === seatId);
         const prevSelected = seats.filter((seat) => seat.status === "secili").map((seat) => seat.id);
         const currentSelectedCount = prevSelected.length;
         const statToBe = seatToClick?.status === "bos" ? "secili" : seatToClick?.status === "secili" ? "bos" : seatToClick?.status;
-        // Early alert and return if trying to select more than 3 seats
         var devam = true;
         if (seatToClick == undefined || statToBe == undefined) {
             return;
         }
         if (statToBe === "dolu") {
-            alert("Seçtiğiniz koltuk dolu!");
+            setShowNotification(true);
+            setNotificationMessage("Seçtiğiniz koltuk dolu!");
             devam = false;
             return;
         }
         if (seatToClick?.status === "bos" && currentSelectedCount >= 3) {
-            alert("En fazla 3 koltuk için seçim yapabilirsiniz!");
+            setShowNotification(true);
+            setNotificationMessage("En fazla 3 koltuk için seçim yapabilirsiniz!");
             devam = false;
             return;
         }
@@ -213,13 +219,10 @@ const Seat: React.FC = () => {
         return errors;
       };
 
-    const handleButtonClick = () => {
-        if(formDataList == null || formDataList.length==0){
-            alert("Kişi bilgileri eksik. Lütfen tüm alanları doldurunuz.");
-            return;
-        }
-        if(selectedSeats.length>formDataList.length){
-            alert("Kişi bilgileri eksik. Lütfen tüm kişiler için tüm alanları doldurunuz.");
+    const handleSubmitButtonClick = () => {
+        if(formDataList == null || formDataList.length==0 || selectedSeats.length>formDataList.length){
+            setShowNotification(true);
+            setNotificationMessage("Kişi bilgileri eksik. Lütfen tüm alanları doldurunuz.");
             return;
         }
         let newSeats: string[] = []; // Explicitly typing newSeats
@@ -234,7 +237,8 @@ const Seat: React.FC = () => {
                 const newForms = [...formDataList];
                 newForms[index] = updateWithErrors;
                 setFormDataList(newForms);
-                alert(e.id + " numaralı koltuk için " + (selectedSeats.indexOf(e.id) + 1) + ". Kişi bilgileri eksik ya da hatalı. Lütfen tüm alanları doldurunuz.");
+                setShowNotification(true);
+                setNotificationMessage(e.id + " numaralı koltuk için " + (selectedSeats.indexOf(e.id) + 1) + ". Yolcu bilgileri eksik ya da hatalı. Lütfen tüm alanları doldurunuz.");
                 newSeats.push("-1");
             } else {
                 newSeats.push(e.id);
@@ -248,7 +252,9 @@ const Seat: React.FC = () => {
             setDoluSeatUsers((prev) => [...prev, ...newUsers]);
             setSelectedSeats([]); // Reset selected seats after updating
             setFormDataList([]);//reset form data
-            alert("Rezervasyon işlemleri başarılı!")
+            setBoxType("success");
+            setShowNotification(true);
+            setNotificationMessage("Rezervasyon işlemleri başarılı!");
             window.location.reload();
         }
     };
@@ -290,8 +296,16 @@ const Seat: React.FC = () => {
                         onMouseLeave={() => handleSeatHover(null)}
                         onClick={() => handleSeatClick(seat.id)}
                     />
+                    
                 ))}
             </svg>
+            {showNotification && (
+                <NotificationBox
+                    message={notificationMessage}
+                    onClose={() => setShowNotification(false)} // Close notification
+                    boxType={boxType}
+                />
+            )}
             {hoveredSeat && (
                 <div
                     style={{
@@ -364,8 +378,15 @@ const Seat: React.FC = () => {
                             <button style={{
                                 border: '2px solid #ccc',
                                 backgroundColor: '#c7c7c7',
-                            }} onClick={handleButtonClick}>
+                            }} onClick={handleSubmitButtonClick}>
                                 <span style={{ marginLeft: '140px',  marginRight: '140px', fontSize: '20px', lineHeight: '50px'}}>İşlemleri Tamamla</span></button>
+                                {showNotification && (
+                                    <NotificationBox
+                                        message={notificationMessage}
+                                        onClose={() => setShowNotification(false)}
+                                        boxType={boxType} // Close notification
+                                    />
+                                )}
                         </div>
                         <h4 style={{
                                 border: '2px solid #ccc',
