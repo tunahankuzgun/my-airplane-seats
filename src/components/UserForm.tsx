@@ -146,6 +146,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                             <option value="erkek">Erkek</option>
                             <option value="kadın">Kadın</option>
                         </select>
+                        {formData.errors.gender && <p className="text-red-500 text-sm">{formData.errors.gender}</p>}
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <label>Doğum Tarihi: </label>

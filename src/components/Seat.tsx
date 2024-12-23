@@ -367,9 +367,17 @@ const Seat: React.FC = () => {
                             }} onClick={handleButtonClick}>
                                 <span style={{ marginLeft: '140px',  marginRight: '140px', fontSize: '20px', lineHeight: '50px'}}>İşlemleri Tamamla</span></button>
                         </div>
-                        <h4>
-                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                                {selectedSeats.map((seat) => (
+                        <h4 style={{
+                                border: '2px solid #ccc',
+                                backgroundColor: '#c9c9c9',
+                                marginTop: '20px',
+                                lineHeight:'100px',
+                                marginLeft:'-40px',
+                                marginRight:'-40px'
+                            }}>
+                            <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
+                               <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginLeft:'40px'}}>
+                               {selectedSeats.map((seat) => (
                                     <div style={{
                                         width: '20px',
                                         height: '35px',
@@ -380,19 +388,20 @@ const Seat: React.FC = () => {
                                         color: 'black', // Metin rengi siyah
                                         textAlign: 'center', // Metni ortalamak
                                         lineHeight: '35px', // Metni dikeyde ortalar (yükseklik ile aynı olmalı)
+                                        border: '0.5px solid rgb(197, 169, 169)' // Border with width, style, and color
                                     }}>{seat}</div>
                                 ))}
-                                <div></div><div></div>
-                                <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                </div>
+                                <div style={{ justifyContent: 'flex-end'  }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '3px',justifyContent: 'flex-end', marginBottom:'-80px'}}>
                                         {selectedSeats.length} x
-                                        <div style={{
+                                        <rect style={{
                                             width: '10px',
                                             height: '10px',
                                             backgroundColor: '#EFCE64',
-                                        }}></div>
+                                        }}></rect>
                                     </div>
-                                    <div>{selectedSeats.length * 1000} TL</div>
+                                    {selectedSeats.length * 1000} TL
                                 </div>
                             </div>
                         </h4>

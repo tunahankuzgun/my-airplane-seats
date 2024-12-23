@@ -8,6 +8,7 @@ const Timer: React.FC = () => {
 
     const handleNoAction = () => {
         localStorage.removeItem("selectedSeats"); // Seçimleri temizle
+        localStorage.removeItem("userFormData"); // form datayı temizle
         window.location.reload();
     }
     useEffect(() => {
