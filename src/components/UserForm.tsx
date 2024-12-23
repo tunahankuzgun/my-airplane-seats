@@ -94,7 +94,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <label>İsim: </label>
                         <input
-                          style={{ margin: 0, color: "#000" }}
+                            style={{ margin: 0, color: "#000" }}
                             type="text"
                             name="isim"
                             value={formData.isim}
@@ -106,7 +106,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                     <div style={{ display: 'flex', flexDirection: 'column'}}>
                         <label>Soyisim: </label>
                         <input
-                         style={{ margin: 0, color: "#000" }}
+                            style={{ margin: 0, color: "#000" }}
                             type="text"
                             name="soyisim"
                             value={formData.soyisim}
@@ -118,7 +118,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                     <div style={{ display: 'flex', flexDirection: 'column'}}>
                         <label>Telefon: </label>
                         <input
-                         style={{ margin: 0, color: "#000" }}
+                            style={{ margin: 0, color: "#000" }}
                             type="tel"
                             name="telefon"
                             value={formData.telefon}
@@ -130,7 +130,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                     <div style={{ display: 'flex', flexDirection: 'column'  }}>
                         <label>E-posta: </label>
                         <input
-                             style={{ margin: 0, color: "#000" }}
+                            style={{ margin: 0, color: "#000" }}
                             type="email"
                             name="eposta"
                             value={formData.eposta}

@@ -209,15 +209,15 @@ const Seat: React.FC = () => {
 
     const validateForm = (form: UserFormData) => {
         const errors = {
-          name: form.isim && form.isim.trim().length > 0? null : 'İsim boş olamaz.',
-          surname: form.soyisim && form.soyisim.trim().length > 0 ? null : 'Soyisim boş olamaz.',
-          phone: form.telefon && form.telefon.trim().length > 0 && /^[0-9]{10}$/.test(form.telefon) ? null : 'Geçersiz telefon numarası.',
-          email: form.eposta && form.eposta.trim().length > 0 && /\S+@\S+\.\S+/.test(form.eposta) ? null : 'Geçersiz e-posta adresi.',
-          gender: form.cinsiyet && form.cinsiyet.trim().length > 0 ? null : 'Cinsiyet seçimi yapılmalıdır.',
-          birthDate: form.dogumTarihi && form.dogumTarihi.trim().length > 0 ? null : 'Doğum tarihi boş olamaz.'
+            name: form.isim && form.isim.trim().length > 0 ? null : 'İsim boş olamaz.',
+            surname: form.soyisim && form.soyisim.trim().length > 0 ? null : 'Soyisim boş olamaz.',
+            phone: form.telefon && form.telefon.trim().length > 0 && /^[0-9]{10}$/.test(form.telefon) ? null : 'Geçersiz telefon numarası.',
+            email: form.eposta && form.eposta.trim().length > 0 && /\S+@\S+\.\S+/.test(form.eposta) ? null : 'Geçersiz e-posta adresi.',
+            gender: form.cinsiyet && form.cinsiyet.trim().length > 0 ? null : 'Cinsiyet seçimi yapılmalıdır.',
+            birthDate: form.dogumTarihi && form.dogumTarihi.trim().length > 0 ? null : 'Doğum tarihi boş olamaz.'
         };
         return errors;
-      };
+    };
 
     const handleSubmitButtonClick = () => {
         if(formDataList == null || formDataList.length==0 || selectedSeats.length>formDataList.length){
@@ -238,7 +238,7 @@ const Seat: React.FC = () => {
                 newForms[index] = updateWithErrors;
                 setFormDataList(newForms);
                 setShowNotification(true);
-                setNotificationMessage(e.id + " numaralı koltuk için " + (selectedSeats.indexOf(e.id) + 1) + ". Yolcu bilgileri eksik ya da hatalı. Lütfen tüm alanları doldurunuz.");
+                setNotificationMessage((Number(e.id) + 1) + " numaralı koltuk için " + (selectedSeats.indexOf(e.id) + 1) + ". Yolcu bilgileri eksik ya da hatalı. Lütfen tüm alanları doldurunuz.");
                 newSeats.push("-1");
             } else {
                 newSeats.push(e.id);
@@ -272,10 +272,10 @@ const Seat: React.FC = () => {
 
     // Handle mouse move event
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-      const { clientX, clientY } = e;
-      setMousePosition({ x: clientX, y: clientY });
+        const { clientX, clientY } = e;
+        setMousePosition({ x: clientX, y: clientY });
     };
-  
+
 
     return (
         <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}
@@ -352,8 +352,8 @@ const Seat: React.FC = () => {
                     <>
                         <ul style={{marginBottom: '100px' }}>
                             {selectedSeats.map((seat) => (
-                                <div style={{marginBottom: '10px' }}>
-                                    {formDataList.some(e => e.id === seat) ? (
+                                <div key={seat} style={{marginBottom: '10px' }}>
+                                    {formDataList.filter(e => e.id === seat) ? (
                                         // Eğer seat ile eşleşen formData varsa
                                         <UserForm
                                             dataFromSeats={formDataList.filter(e => e.id === seat).pop()}
@@ -397,9 +397,9 @@ const Seat: React.FC = () => {
                                 marginRight:'-40px'
                             }}>
                             <div style={{ display: 'flex',  justifyContent: 'space-between' }}>
-                               <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginLeft:'40px'}}>
-                               {selectedSeats.map((seat) => (
-                                    <div style={{
+                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginLeft: '40px' }}>
+                                    {selectedSeats.map((seat) => (
+                                    <div key={seat} style={{
                                         width: '20px',
                                         height: '35px',
                                         backgroundColor: '#EFCE64',
@@ -410,17 +410,17 @@ const Seat: React.FC = () => {
                                         textAlign: 'center', // Metni ortalamak
                                         lineHeight: '35px', // Metni dikeyde ortalar (yükseklik ile aynı olmalı)
                                         border: '0.5px solid rgb(197, 169, 169)' // Border with width, style, and color
-                                    }}>{seat}</div>
+                                    }}>{(Number(seat) + 1)}</div>
                                 ))}
                                 </div>
                                 <div style={{ justifyContent: 'flex-end'  }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '3px',justifyContent: 'flex-end', marginBottom:'-80px'}}>
                                         {selectedSeats.length} x
-                                        <rect style={{
+                                        <div style={{
                                             width: '10px',
                                             height: '10px',
                                             backgroundColor: '#EFCE64',
-                                        }}></rect>
+                                        }}></div>
                                     </div>
                                     {selectedSeats.length * 1000} TL
                                 </div>
