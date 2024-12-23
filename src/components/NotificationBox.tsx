@@ -3,7 +3,6 @@ import React from "react";
 const NotificationBox: React.FC<{ message: string; onClose: () => void, boxType: string }> = ({ message, onClose, boxType }) => {
     return (
         <>
-            {/* Full-screen overlay to block interaction */}
             <div
                 style={{
                     position: "fixed",
@@ -11,33 +10,32 @@ const NotificationBox: React.FC<{ message: string; onClose: () => void, boxType:
                     left: 0,
                     width: "100%",
                     height: "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-                    zIndex: 9998, // Make sure the overlay is behind the notification box
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    zIndex: 9998,
                 }}
-                onClick={onClose} // Close notification when clicking on the overlay
+                onClick={onClose}
             />
 
-            {/* Notification Box */}
             <div
-                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the notification box
+                onClick={(e) => e.stopPropagation()}
                 style={{
-                    position: "fixed", // Fixed position to stay in place
-                    top: "50%",        // Center vertically
-                    left: "50%",       // Center horizontally
-                    transform: "translate(-50%, -50%)", // Adjust to exact center
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
                     padding: "15px",
-                    backgroundColor: boxType=="error"?"  #f8d7da":"  rgb(188, 240, 201)", // Background color
-                    color: boxType=="error"?"  #721c24":"  rgb(22, 70, 33)",          // Text color
-                    border: boxType=="error"?"1px solid #f5c6cb":"1px solid rgb(163, 240, 182)", // Border style
-                    borderRadius: "5px",      // Rounded corners
-                    zIndex: 9999,             // High z-index to stay above the overlay
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Shadow effect
+                    backgroundColor: boxType=="error"?"  #f8d7da":"  rgb(188, 240, 201)",
+                    color: boxType=="error"?"  #721c24":"  rgb(22, 70, 33)",
+                    border: boxType=="error"?"1px solid #f5c6cb":"1px solid rgb(163, 240, 182)",
+                    borderRadius: "5px",
+                    zIndex: 9999,
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                     
                 }}
             >
                 <span>{message}</span>
                 <button
-                    onClick={onClose} // Close button handler
+                    onClick={onClose}
                     style={{
                         marginLeft: "10px",
                         background: "none",

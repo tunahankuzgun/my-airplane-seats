@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 const Timer: React.FC = () => {
-    const [isIdle30, setIsIdle30] = useState(false); // 30-second warning
-    const [isIdle45, setIsIdle45] = useState(false); // 45-second timeout
-    const idle30Timeout = 30000; // 30 seconds for testing
-    const idle45Timeout = 45000; // 45 seconds for testing
+    const [isIdle30, setIsIdle30] = useState(false);
+    const [isIdle45, setIsIdle45] = useState(false);
+    const idle30Timeout = 30000;
+    const idle45Timeout = 45000;
 
-    // **UseRefs for timers to persist across renders**
     let timeout30 : NodeJS.Timeout;
     let timeout45 : NodeJS.Timeout;
     let timerActive = false;
 
-    // **Clears all timers and resets states**
     const resetIdleTimer = () => {
         if(timerActive){
             if (timeout30) clearTimeout(timeout30);
@@ -20,7 +18,6 @@ const Timer: React.FC = () => {
             setIsIdle30(false);
             setIsIdle45(false);
 
-            // Remove event listeners
             window.removeEventListener("mousemove", resetIdleTimer);
             window.removeEventListener("keydown", resetIdleTimer);
             window.removeEventListener("click", resetIdleTimer);
@@ -29,15 +26,12 @@ const Timer: React.FC = () => {
         }
     };
 
-    // **Starts the idle timer**
     const startIdleTimer = () => {
         if(!timerActive){
-            // Attach event listeners to detect user activity
             window.addEventListener("mousemove", resetIdleTimer);
             window.addEventListener("keydown", resetIdleTimer);
             window.addEventListener("click", resetIdleTimer);
     
-            // Start timers initially
             timeout30 = setTimeout(() => setIsIdle30(true), idle30Timeout);
             timeout45 = setTimeout(() => setIsIdle45(true), idle45Timeout);
             timerActive=true;
@@ -45,31 +39,27 @@ const Timer: React.FC = () => {
 
     };
 
-    // **Handles timeout action**
     const handleNoAction = () => {
-        localStorage.removeItem("selectedSeats"); // Clear selected seats
-        localStorage.removeItem("userFormData"); // Clear form data
+        localStorage.removeItem("selectedSeats");
+        localStorage.removeItem("userFormData");
         window.location.reload();
     };
 
     useEffect(() => {
-        // Timer to check `localStorage.selectedSeats` every 500ms
         const interval = setInterval(() => {
             if(!timerActive){
                 const selectedSeats = localStorage.getItem("selectedSeats");
                 if((selectedSeats && JSON.parse(selectedSeats).length > 0)) {
-                    startIdleTimer(); // Stop timer if no seats are selected
+                    startIdleTimer();
                 }
             }
             
-        }, 500); // Check every 500ms
-    
-        // Cleanup: Clear interval and timers when the component unmounts
+        }, 500);
         return () => {
             clearInterval(interval);
-            resetIdleTimer(); // Also stop idle timers
+            resetIdleTimer();
         };
-    }, []); // Runs only once on mount
+    }, []);
 
     return (
         <div>

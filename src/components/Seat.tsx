@@ -3,12 +3,12 @@ import UserForm, { UserFormData } from '@/components/UserForm';
 import React, { useEffect, useRef, useState } from "react";
 
 type SeatType = {
-    id: string; // Unique identifier
-    x: number; // X-coordinate
-    y: number; // Y-coordinate
-    width: number; // Seat width
-    height: number; // Seat height
-    status: "bos" | "secili" | "dolu" | "NaN"; // Seat status
+    id: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    status: "bos" | "secili" | "dolu" | "NaN";
 };
 
 type UserType = {
@@ -22,22 +22,20 @@ const fetchUsers = async (): Promise<UserType[]> => {
     return response.json();
 };
 
-
-
 const generateSeats = (): SeatType[] => {
     const seats: SeatType[] = [];
-    const gapOffset = 40; // Gap height between rows //koltuklar 12e 16 aralıklar 2px e 4px koridor 20 px aralık 20px iki katı yapcam
-    const corridorOffset = 40; // Gap height between rows
-    var defaultSelected = 0;
+    const gapOffset = 40;
+    const corridorOffset = 40;
+    let defaultSelected = 0;
     for (let rowIndex = 0; rowIndex < 19; rowIndex++) {
         for (let colIndex = 0; colIndex < 4; colIndex++) {
             seats.push({
-                id: `${rowIndex * 4 + colIndex}`, // Unique identifier
-                x: 120 + colIndex * 26 + (colIndex >= 2 ? corridorOffset : 0), // X-coordinate
-                y: 20 + rowIndex * 36 + (rowIndex >= 4 ? gapOffset : 0), // Add gap after the 4th row
-                width: 24, // Width of the seat
-                height: 32, // Height of the seat
-                status: defaultSelected < 10 ? "dolu" : "bos", // Default status
+                id: `${rowIndex * 4 + colIndex}`,
+                x: 120 + colIndex * 26 + (colIndex >= 2 ? corridorOffset : 0),
+                y: 20 + rowIndex * 36 + (rowIndex >= 4 ? gapOffset : 0),
+                width: 24,
+                height: 32,
+                status: defaultSelected < 10 ? "dolu" : "bos",
             });
             defaultSelected++;
         }
@@ -56,10 +54,8 @@ const Seat: React.FC = () => {
     useEffect(() => {
         const savedUsers = localStorage.getItem("users");
         if (savedUsers) {
-            // Parse the saved users and update the state
             setUsers(JSON.parse(savedUsers));
         } else {
-            // Fetch users if not available in localStorage
             fetchUsers().then((fetchedUsers) => {
                 setUsers(fetchedUsers);
                 localStorage.setItem("users", JSON.stringify(fetchedUsers));
@@ -70,7 +66,7 @@ const Seat: React.FC = () => {
     useEffect(() => {
         const savedSelectedSeats = localStorage.getItem("selectedSeats");
         if (savedSelectedSeats) {
-            setSelectedSeats(JSON.parse(savedSelectedSeats)); // Seçimleri yükle
+            setSelectedSeats(JSON.parse(savedSelectedSeats));
             setSeats((prevSeats) =>
                 prevSeats.map((seat) =>
                     JSON.parse(savedSelectedSeats).includes(seat.id)
@@ -84,7 +80,7 @@ const Seat: React.FC = () => {
     useEffect(() => {
         const savedDoluSeats = localStorage.getItem("doluSeats");
         if (savedDoluSeats) {
-            setDoluSeats(JSON.parse(savedDoluSeats)); // Seçimleri yükle
+            setDoluSeats(JSON.parse(savedDoluSeats));
             setSeats((prevSeats) =>
                 prevSeats.map((seat) =>
                     JSON.parse(savedDoluSeats).includes(seat.id)
@@ -98,14 +94,14 @@ const Seat: React.FC = () => {
     useEffect(() => {
         const savedDoluSeatUsers = localStorage.getItem("doluSeatUsers");
         if (savedDoluSeatUsers) {
-            setDoluSeatUsers(JSON.parse(savedDoluSeatUsers)); // Seçimleri yükle
+            setDoluSeatUsers(JSON.parse(savedDoluSeatUsers));
         }
     }, []);
 
     useEffect(() => {
         const userFormData = localStorage.getItem("userFormData");
         if (userFormData) {
-            setFormDataList(JSON.parse(userFormData)); // Seçimleri yükle
+            setFormDataList(JSON.parse(userFormData));
         }
     }, []);
 
@@ -114,7 +110,11 @@ const Seat: React.FC = () => {
     }, [selectedSeats]);
 
     const handleSeatHover = (seat: SeatType | null) => {
-        seat?.status == "dolu" ? setHoveredSeat(seat) : setHoveredSeat(null);
+        if (seat?.status === "dolu") {
+            setHoveredSeat(seat);
+        } else {
+            setHoveredSeat(null);
+        }
     };
 
     const [showNotification, setShowNotification] = useState(false);
@@ -126,7 +126,7 @@ const Seat: React.FC = () => {
         const prevSelected = seats.filter((seat) => seat.status === "secili").map((seat) => seat.id);
         const currentSelectedCount = prevSelected.length;
         const statToBe = seatToClick?.status === "bos" ? "secili" : seatToClick?.status === "secili" ? "bos" : seatToClick?.status;
-        var devam = true;
+        let devam = true;
         if (seatToClick == undefined || statToBe == undefined) {
             return;
         }
@@ -163,17 +163,11 @@ const Seat: React.FC = () => {
             setSelectedSeats(updated);
         }
     };
-    // Form için referans
     const formRef = useRef<HTMLFormElement | null>(null);
-
-    // Buton Tıklama İşlemi
     const [formDataList, setFormDataList] = useState<UserFormData[]>([]);
-
     const handleFormChange = (id: string, data: UserFormData) => {
         setFormDataList((prev) => {
-            // Önce mevcut verileri kontrol et
             const index = prev.findIndex((item) => item.id === id);
-            // Yeni veriyi oluştur
             const updated = {
                 id: id,
                 isim: data.isim,
@@ -189,16 +183,14 @@ const Seat: React.FC = () => {
                     email: null,
                     gender: null,
                     birthDate: null
-                  }
+                }
             };
-            // Eğer ID varsa, güncelle
             if (index !== -1) {
                 const newList = [...prev];
                 newList[index] = updated;
-                return newList; // Yeni referans döndür
+                return newList;
             } else {
-                // ID yoksa ekle
-                return [...prev, updated]; // Yeni referans döndür
+                return [...prev, updated];
             }
         });
     };
@@ -225,14 +217,13 @@ const Seat: React.FC = () => {
             setNotificationMessage("Kişi bilgileri eksik. Lütfen tüm alanları doldurunuz.");
             return;
         }
-        let newSeats: string[] = []; // Explicitly typing newSeats
-        let newUsers: UserFormData[] = []; // Explicitly typing newUsers, can be a more specific type if needed
+        let newSeats: string[] = [];
+        let newUsers: UserFormData[] = [];
     
         formDataList.forEach((e,index) => {
             const errors = validateForm(e);
             if (e == null || Object.values(errors).some((error) => error !== null)) {
-                // Correct the trim() method
-                let updateWithErrors = e;
+                const updateWithErrors = e;
                 updateWithErrors.errors = errors;
                 const newForms = [...formDataList];
                 newForms[index] = updateWithErrors;
@@ -250,8 +241,8 @@ const Seat: React.FC = () => {
         if(!newSeats.includes("-1")&&newSeats.length>0 && newUsers.length>0){
             setDoluSeats((prev) => [...prev, ...newSeats]);
             setDoluSeatUsers((prev) => [...prev, ...newUsers]);
-            setSelectedSeats([]); // Reset selected seats after updating
-            setFormDataList([]);//reset form data
+            setSelectedSeats([]);
+            setFormDataList([]);
             setBoxType("success");
             setShowNotification(true);
             setNotificationMessage("Rezervasyon işlemleri başarılı!");
@@ -270,12 +261,10 @@ const Seat: React.FC = () => {
 
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-    // Handle mouse move event
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const { clientX, clientY } = e;
         setMousePosition({ x: clientX, y: clientY });
     };
-
 
     return (
         <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}
@@ -302,7 +291,7 @@ const Seat: React.FC = () => {
             {showNotification && (
                 <NotificationBox
                     message={notificationMessage}
-                    onClose={() => setShowNotification(false)} // Close notification
+                    onClose={() => setShowNotification(false)}
                     boxType={boxType}
                 />
             )}
@@ -342,11 +331,10 @@ const Seat: React.FC = () => {
                             </p>
                         </>
                     ):(
-                        <p>Loading...</p>
+                        <p>Yükleniyor...</p>
                     )}
                 </div>
             )}
-            {/* Display Selected Seats */}
             <div style={{ marginTop: "20px", textAlign: "center" }}>
                 {selectedSeats.length > 0 ? (
                     <>
@@ -354,7 +342,6 @@ const Seat: React.FC = () => {
                             {selectedSeats.map((seat) => (
                                 <div key={seat} style={{marginBottom: '10px' }}>
                                     {formDataList.filter(e => e.id === seat) ? (
-                                        // Eğer seat ile eşleşen formData varsa
                                         <UserForm
                                             dataFromSeats={formDataList.filter(e => e.id === seat).pop()}
                                             ref={formRef}
@@ -362,7 +349,6 @@ const Seat: React.FC = () => {
                                             onChange={(data) => handleFormChange(seat, data)}
                                         />
                                     ) : (
-                                        // Eğer seat ile eşleşen formData yoksa yeni bir form render et
                                         <UserForm
                                         dataFromSeats={null}
                                             ref={formRef}
@@ -379,12 +365,12 @@ const Seat: React.FC = () => {
                                 border: '2px solid #ccc',
                                 backgroundColor: '#c7c7c7',
                             }} onClick={handleSubmitButtonClick}>
-                                <span style={{ marginLeft: '140px',  marginRight: '140px', fontSize: '20px', lineHeight: '50px'}}>İşlemleri Tamamla</span></button>
+                                <span style={{display:'flex', marginLeft: '140px',  marginRight: '140px', fontSize: '20px', lineHeight: '50px'}}>İşlemleri Tamamla</span></button>
                                 {showNotification && (
                                     <NotificationBox
                                         message={notificationMessage}
                                         onClose={() => setShowNotification(false)}
-                                        boxType={boxType} // Close notification
+                                        boxType={boxType}
                                     />
                                 )}
                         </div>
@@ -404,12 +390,12 @@ const Seat: React.FC = () => {
                                         height: '35px',
                                         backgroundColor: '#EFCE64',
                                         marginRight: '5px',
-                                        alignItems: 'center', // Dikey hizalama
-                                        justifyContent: 'center', // Yatay hizalama
-                                        color: 'black', // Metin rengi siyah
-                                        textAlign: 'center', // Metni ortalamak
-                                        lineHeight: '35px', // Metni dikeyde ortalar (yükseklik ile aynı olmalı)
-                                        border: '0.5px solid rgb(197, 169, 169)' // Border with width, style, and color
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'black',
+                                        textAlign: 'center',
+                                        lineHeight: '35px',
+                                        border: '0.5px solid rgb(197, 169, 169)'
                                     }}>{(Number(seat) + 1)}</div>
                                 ))}
                                 </div>
@@ -428,7 +414,7 @@ const Seat: React.FC = () => {
                         </h4>
                     </>
                 ) : (
-                    <p>No seats selected.</p>
+                    <p>Henüz bir koltuk seçimi yapmadınız.</p>
                 )}
             </div>
         </div>

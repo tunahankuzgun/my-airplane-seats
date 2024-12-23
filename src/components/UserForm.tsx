@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useState } from 'react';
-// Form veri tipi
+
 export type UserFormData = {
     id: string;
     isim: string;
@@ -15,27 +15,24 @@ export type UserFormData = {
         email: string | null;
         gender: string | null;
         birthDate: string | null;
-      };
+    };
 };
 
-// Props tipi
 type UserFormProps = {
-    onChange: (data: UserFormData) => void; // Submit işlemi
+    onChange: (data: UserFormData) => void;
     sıra: number;
     dataFromSeats: UserFormData | undefined| null;
 
 };
 
-// Form Bileşeni
 const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, dataFromSeats }, ref) => {
-    // Form verileri
     const [formData, setFormData] = useState<UserFormData>({
         id:'',
         isim: '',
         soyisim: '',
         telefon: '',
         eposta: '',
-        cinsiyet: '', // Varsayılan boş değer
+        cinsiyet: '',
         dogumTarihi: '',
         errors: {
             name: null,
@@ -44,17 +41,15 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
             email: null,
             gender: null,
             birthDate: null
-          }
+        }
     });
 
     useEffect(() => {
         if (dataFromSeats) {
             setFormData(dataFromSeats);
         }
-      }, [dataFromSeats]);
+    }, [dataFromSeats]);
 
-
-    // Değişiklikleri izler
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setFormData({
@@ -67,15 +62,12 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
         });
     };
 
-    // Form Submit işlemi
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Sayfanın yenilenmesini engelle
+        event.preventDefault();
         console.log('Form verileri gönderiliyor:', formData);
-        //onSubmit(formData); // Üst bileşene verileri gönder
     };
-    const [isCollapsed, setIsCollapsed] = useState(true); // State to track collapse status
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
-    // Toggle the collapse state
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };

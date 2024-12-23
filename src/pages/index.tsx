@@ -6,9 +6,9 @@ export default function HomePage() {
       <Timer />
       <div style={{
           display: 'flex',
-          flexDirection: 'column',  // Stack elements vertically
-          justifyContent: 'center', // Vertically center all content
-          alignItems: 'center',     // Horizontally center all content
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           margin: 0
       }}>
       <Seats />
@@ -17,14 +17,14 @@ export default function HomePage() {
             width={10}
             height={15}
             fill="#383838"
-            x={5} // İlk dikdörtgenin konumu
+            x={5}
           />
           <text
-            x={10} // Yatayda metnin ortalanması için x koordinatı
-            y={25} // Dikdörtgenin altına konumlandırmak için y koordinatı
-            textAnchor="middle" // Metni yatayda ortalar
-            fontSize="10" // Yazı boyutu
-            color= "#000"// Yazı rengi
+            x={10}
+            y={25}
+            textAnchor="middle"
+            fontSize="10"
+            color= "#000"
           >
             Dolu
           </text>
@@ -32,14 +32,14 @@ export default function HomePage() {
             width={10}
             height={15}
             fill="#EFCE64"
-            x={45} // İkinci dikdörtgenin konumu (ilk dikdörtgenin sağında)
+            x={45}
           />
           <text
-            x={50} // Yatayda metnin ortalanması için x koordinatı
-            y={25} // Dikdörtgenin altına konumlandırmak için y koordinatı
-            textAnchor="middle" // Metni yatayda ortalar
-            fontSize="10" // Yazı boyutu
-            color= "#000" // Yazı rengi
+            x={50}
+            y={25}
+            textAnchor="middle"
+            fontSize="10"
+            color= "#000"
           >
             Seçili
           </text>
@@ -47,14 +47,14 @@ export default function HomePage() {
             width={10}
             height={15}
             fill="#F2F2F2"
-            x={90} // Üçüncü dikdörtgenin konumu (ikinci dikdörtgenin sağında)
+            x={90}
           />
           <text
-            x={95} // Yatayda metnin ortalanması için x koordinatı
-            y={25} // Dikdörtgenin altına konumlandırmak için y koordinatı
-            textAnchor="middle" // Metni yatayda ortalar
-            fontSize="10" // Yazı boyutu
-            color="#0000" // Yazı rengi
+            x={95}
+            y={25}
+            textAnchor="middle"
+            fontSize="10"
+            color="#0000"
           >
             Boş
           </text>
