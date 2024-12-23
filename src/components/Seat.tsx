@@ -262,9 +262,19 @@ const Seat: React.FC = () => {
     }, [doluSeatUsers]);
 
 
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+    // Handle mouse move event
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+      const { clientX, clientY } = e;
+      setMousePosition({ x: clientX, y: clientY });
+    };
+  
+
     return (
-        <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 1000" width="400" height="600">
+        <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}
+        onMouseMove={handleMouseMove}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 850" width="400" height="600">
                 {seats.map((seat) => (
                     <rect
                         key={seat.id}
@@ -282,14 +292,12 @@ const Seat: React.FC = () => {
                     />
                 ))}
             </svg>
-
-            {/* Tooltip */}
             {hoveredSeat && (
                 <div
                     style={{
-                        position: "absolute",
-                        top: `${(parseInt(hoveredSeat.id)+1)/4 * 30+30}px`,
-                        left: `${hoveredSeat.x + 140}px`,
+                        position: "fixed",
+                        top: mousePosition.y+5,
+                        left: mousePosition.x+5,
                         background: "#ffffff",
                         border: "1px solid #ccc",
                         borderRadius: "5px",
@@ -298,23 +306,25 @@ const Seat: React.FC = () => {
                         pointerEvents: "none",
                     }}
                 >
-                    <h4 style={{ margin: 0, color: "#000" }}>Seat: {hoveredSeat.id}</h4>
+                    <h4 style={{ margin: 0, color: "#000" }}>
+                    <span style={{ fontWeight: "bold" }}>Koltuk:</span> {parseInt(hoveredSeat.id) + 1}
+                    </h4>
                     {users.length > 0 && parseInt(hoveredSeat.id)<10? (
                         <>
                             <p style={{ margin: 0, color: "#000" }}>
-                                <strong>İsim:</strong> {users[parseInt(hoveredSeat.id) % users.length]?.name.split(" ")[0]}
+                                <strong>İsim Soyisim:</strong>
                             </p>
                             <p style={{ margin: 0, color: "#000" }}>
-                                <strong>Soyisim:</strong> {users[parseInt(hoveredSeat.id) % users.length]?.name.split(" ").pop()}
+                                {users[parseInt(hoveredSeat.id) % users.length]?.name}
                             </p>
                         </>
                     ) : doluSeats.includes(hoveredSeat.id)?(
                         <>
                             <p style={{ margin: 0, color: "#000" }}>
-                                <strong>İsim:</strong> {doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.isim}
+                            <strong>İsim Soyisim:</strong>
                             </p>
                             <p style={{ margin: 0, color: "#000" }}>
-                                <strong>Soyisim:</strong> {doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.soyisim}
+                            {doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.isim + " "+ doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.soyisim}
                             </p>
                         </>
                     ):(
@@ -326,9 +336,9 @@ const Seat: React.FC = () => {
             <div style={{ marginTop: "20px", textAlign: "center" }}>
                 {selectedSeats.length > 0 ? (
                     <>
-                        <ul>
+                        <ul style={{marginBottom: '100px' }}>
                             {selectedSeats.map((seat) => (
-                                <div>
+                                <div style={{marginBottom: '10px' }}>
                                     {formDataList.some(e => e.id === seat) ? (
                                         // Eğer seat ile eşleşen formData varsa
                                         <UserForm
@@ -348,9 +358,14 @@ const Seat: React.FC = () => {
                                     )}
                                 </div>
                             ))}
+
                         </ul>
                         <div>
-                            <button onClick={handleButtonClick}>İşlemleri Tamamla</button>
+                            <button style={{
+                                border: '2px solid #ccc',
+                                backgroundColor: '#c7c7c7',
+                            }} onClick={handleButtonClick}>
+                                <span style={{ marginLeft: '140px',  marginRight: '140px', fontSize: '20px', lineHeight: '50px'}}>İşlemleri Tamamla</span></button>
                         </div>
                         <h4>
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>

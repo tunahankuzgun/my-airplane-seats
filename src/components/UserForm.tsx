@@ -1,5 +1,4 @@
 import React, { forwardRef, useEffect, useState } from 'react';
-
 // Form veri tipi
 export type UserFormData = {
     id: string;
@@ -83,8 +82,12 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
 
     return (
         <div>
-            <button onClick={toggleCollapse}>
-                {isCollapsed ? sıra+ '. Yolcu      >' : sıra+'. Yolcu      v'}
+            <button onClick={toggleCollapse} style={{
+                border: '2px solid #ccc',
+                backgroundColor: '#c7c7c7'
+            }}>
+                <span style={{ marginLeft: '10px' }}>{sıra}. Yolcu</span>
+                <span style={{  verticalAlign: 'middle', fontSize: '24px',marginLeft: '350px', marginRight: '10px', color:'#fff', display: 'inline-block', transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)' }}>{'>'}</span>
             </button>
             <div style={{ display: isCollapsed ? 'none' : 'block' }}>
                 <form ref={ref} onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
