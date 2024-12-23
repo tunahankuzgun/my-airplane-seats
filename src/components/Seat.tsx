@@ -48,8 +48,8 @@ const Seat: React.FC = () => {
     const [users, setUsers] = useState<UserType[]>([]);
     const [hoveredSeat, setHoveredSeat] = useState<SeatType | null>(null);
     const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-    const [doluSeats, setDoluSeats] = useState<string[]>([]);
-    const [doluSeatUsers, setDoluSeatUsers] = useState<UserFormData[]>([]);
+    const [reservedSeats, setReservedSeats] = useState<string[]>([]);
+    const [reservedSeatUsers, setReservedSeatUsers] = useState<UserFormData[]>([]);
 
     useEffect(() => {
         const savedUsers = localStorage.getItem("users");
@@ -78,12 +78,12 @@ const Seat: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const savedDoluSeats = localStorage.getItem("doluSeats");
-        if (savedDoluSeats) {
-            setDoluSeats(JSON.parse(savedDoluSeats));
+        const savedReservedSeats = localStorage.getItem("reservedSeats");
+        if (savedReservedSeats) {
+            setReservedSeats(JSON.parse(savedReservedSeats));
             setSeats((prevSeats) =>
                 prevSeats.map((seat) =>
-                    JSON.parse(savedDoluSeats).includes(seat.id)
+                    JSON.parse(savedReservedSeats).includes(seat.id)
                         ? { ...seat, status: "dolu" }
                         : seat
                 )
@@ -92,9 +92,9 @@ const Seat: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const savedDoluSeatUsers = localStorage.getItem("doluSeatUsers");
-        if (savedDoluSeatUsers) {
-            setDoluSeatUsers(JSON.parse(savedDoluSeatUsers));
+        const savedReservedSeatUsers = localStorage.getItem("reservedSeatUsers");
+        if (savedReservedSeatUsers) {
+            setReservedSeatUsers(JSON.parse(savedReservedSeatUsers));
         }
     }, []);
 
@@ -126,23 +126,23 @@ const Seat: React.FC = () => {
         const prevSelected = seats.filter((seat) => seat.status === "secili").map((seat) => seat.id);
         const currentSelectedCount = prevSelected.length;
         const statToBe = seatToClick?.status === "bos" ? "secili" : seatToClick?.status === "secili" ? "bos" : seatToClick?.status;
-        let devam = true;
+        let canContinue = true;
         if (seatToClick == undefined || statToBe == undefined) {
             return;
         }
         if (statToBe === "dolu") {
             setShowNotification(true);
             setNotificationMessage("Seçtiğiniz koltuk dolu!");
-            devam = false;
+            canContinue = false;
             return;
         }
         if (seatToClick?.status === "bos" && currentSelectedCount >= 3) {
             setShowNotification(true);
             setNotificationMessage("En fazla 3 koltuk için seçim yapabilirsiniz!");
-            devam = false;
+            canContinue = false;
             return;
         }
-        if (devam) {
+        if (canContinue) {
             setSeats((prevSeats) =>
                 prevSeats.map((seat) =>
                     seat.id === seatId
@@ -151,7 +151,7 @@ const Seat: React.FC = () => {
                 )
             );
         }
-        if (devam) {
+        if (canContinue) {
             const id = seatToClick.id;
             let updated = prevSelected;
             if (statToBe === "secili") {
@@ -170,12 +170,12 @@ const Seat: React.FC = () => {
             const index = prev.findIndex((item) => item.id === id);
             const updated = {
                 id: id,
-                isim: data.isim,
-                soyisim: data.soyisim,
-                telefon: data.telefon,
-                eposta: data.eposta,
-                cinsiyet: data.cinsiyet,
-                dogumTarihi: data.dogumTarihi,
+                name: data.name,
+                surname: data.surname,
+                phone: data.phone,
+                email: data.email,
+                gender: data.gender,
+                birthDate: data.birthDate,
                 errors: {
                     name: null,
                     surname: null,
@@ -201,12 +201,12 @@ const Seat: React.FC = () => {
 
     const validateForm = (form: UserFormData) => {
         const errors = {
-            name: form.isim && form.isim.trim().length > 0 ? null : 'İsim boş olamaz.',
-            surname: form.soyisim && form.soyisim.trim().length > 0 ? null : 'Soyisim boş olamaz.',
-            phone: form.telefon && form.telefon.trim().length > 0 && /^[0-9]{10}$/.test(form.telefon) ? null : 'Geçersiz telefon numarası.',
-            email: form.eposta && form.eposta.trim().length > 0 && /\S+@\S+\.\S+/.test(form.eposta) ? null : 'Geçersiz e-posta adresi.',
-            gender: form.cinsiyet && form.cinsiyet.trim().length > 0 ? null : 'Cinsiyet seçimi yapılmalıdır.',
-            birthDate: form.dogumTarihi && form.dogumTarihi.trim().length > 0 ? null : 'Doğum tarihi boş olamaz.'
+            name: form.name && form.name.trim().length > 0 ? null : 'İsim boş olamaz.',
+            surname: form.surname && form.surname.trim().length > 0 ? null : 'Soyisim boş olamaz.',
+            phone: form.phone && form.phone.trim().length > 0 && /^[0-9]{10}$/.test(form.phone) ? null : 'Geçersiz telefon numarası.',
+            email: form.email && form.email.trim().length > 0 && /\S+@\S+\.\S+/.test(form.email) ? null : 'Geçersiz e-posta adresi.',
+            gender: form.gender && form.gender.trim().length > 0 ? null : 'Cinsiyet seçimi yapılmalıdır.',
+            birthDate: form.birthDate && form.birthDate.trim().length > 0 ? null : 'Doğum tarihi boş olamaz.'
         };
         return errors;
     };
@@ -239,8 +239,8 @@ const Seat: React.FC = () => {
         });
 
         if(!newSeats.includes("-1")&&newSeats.length>0 && newUsers.length>0){
-            setDoluSeats((prev) => [...prev, ...newSeats]);
-            setDoluSeatUsers((prev) => [...prev, ...newUsers]);
+            setReservedSeats((prev) => [...prev, ...newSeats]);
+            setReservedSeatUsers((prev) => [...prev, ...newUsers]);
             setSelectedSeats([]);
             setFormDataList([]);
             setBoxType("success");
@@ -251,12 +251,12 @@ const Seat: React.FC = () => {
     };
 
     useEffect(() => {
-        localStorage.setItem("doluSeats", JSON.stringify(doluSeats));
-    }, [doluSeats]);
+        localStorage.setItem("reservedSeats", JSON.stringify(reservedSeats));
+    }, [reservedSeats]);
 
     useEffect(() => {
-        localStorage.setItem("doluSeatUsers", JSON.stringify(doluSeatUsers));
-    }, [doluSeatUsers]);
+        localStorage.setItem("reservedSeatUsers", JSON.stringify(reservedSeatUsers));
+    }, [reservedSeatUsers]);
 
 
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -321,13 +321,13 @@ const Seat: React.FC = () => {
                                 {users[parseInt(hoveredSeat.id) % users.length]?.name}
                             </p>
                         </>
-                    ) : doluSeats.includes(hoveredSeat.id)?(
+                    ) : reservedSeats.includes(hoveredSeat.id)?(
                         <>
                             <p style={{ margin: 0, color: "#000" }}>
                             <strong>İsim Soyisim:</strong>
                             </p>
                             <p style={{ margin: 0, color: "#000" }}>
-                            {doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.isim + " "+ doluSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.soyisim}
+                            {reservedSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.name + " "+ reservedSeatUsers.filter(e=>e.id===hoveredSeat.id).pop()?.surname}
                             </p>
                         </>
                     ):(
@@ -345,14 +345,14 @@ const Seat: React.FC = () => {
                                         <UserForm
                                             dataFromSeats={formDataList.filter(e => e.id === seat).pop()}
                                             ref={formRef}
-                                            sıra={selectedSeats.indexOf(seat) + 1}
+                                            index={selectedSeats.indexOf(seat) + 1}
                                             onChange={(data) => handleFormChange(seat, data)}
                                         />
                                     ) : (
                                         <UserForm
                                         dataFromSeats={null}
                                             ref={formRef}
-                                            sıra={selectedSeats.indexOf(seat) + 1}
+                                            index={selectedSeats.indexOf(seat) + 1}
                                             onChange={(data) => handleFormChange(seat, data)}
                                         />
                                     )}

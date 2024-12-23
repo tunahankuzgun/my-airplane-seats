@@ -2,12 +2,12 @@ import React, { forwardRef, useEffect, useState } from 'react';
 
 export type UserFormData = {
     id: string;
-    isim: string;
-    soyisim: string;
-    telefon: string;
-    eposta: string;
-    cinsiyet: '' | 'erkek' | 'kadın';
-    dogumTarihi: string;
+    name: string;
+    surname: string;
+    phone: string;
+    email: string;
+    gender: '' | 'erkek' | 'kadın';
+    birthDate: string;
     errors: {
         name: string | null;
         surname: string | null;
@@ -20,20 +20,20 @@ export type UserFormData = {
 
 type UserFormProps = {
     onChange: (data: UserFormData) => void;
-    sıra: number;
+    index: number;
     dataFromSeats: UserFormData | undefined| null;
 
 };
 
-const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, dataFromSeats }, ref) => {
+const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, index, dataFromSeats }, ref) => {
     const [formData, setFormData] = useState<UserFormData>({
         id:'',
-        isim: '',
-        soyisim: '',
-        telefon: '',
-        eposta: '',
-        cinsiyet: '',
-        dogumTarihi: '',
+        name: '',
+        surname: '',
+        phone: '',
+        email: '',
+        gender: '',
+        birthDate: '',
         errors: {
             name: null,
             surname: null,
@@ -78,7 +78,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                 border: '2px solid #ccc',
                 backgroundColor: '#c7c7c7'
             }}>
-                <span style={{ marginLeft: '10px' }}>{sıra}. Yolcu</span>
+                <span style={{ marginLeft: '10px' }}>{index}. Yolcu</span>
                 <span style={{  verticalAlign: 'middle', fontSize: '24px',marginLeft: '350px', marginRight: '10px', color:'#fff', display: 'inline-block', transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)' }}>{'>'}</span>
             </button>
             <div style={{ display: isCollapsed ? 'none' : 'block' }}>
@@ -88,8 +88,8 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                         <input
                             style={{ margin: 0, color: "#000" }}
                             type="text"
-                            name="isim"
-                            value={formData.isim}
+                            name="name"
+                            value={formData.name}
                             onChange={handleChange}
                             required
                         />
@@ -100,8 +100,8 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                         <input
                             style={{ margin: 0, color: "#000" }}
                             type="text"
-                            name="soyisim"
-                            value={formData.soyisim}
+                            name="surname"
+                            value={formData.surname}
                             onChange={handleChange}
                             required
                         />
@@ -112,8 +112,8 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                         <input
                             style={{ margin: 0, color: "#000" }}
                             type="tel"
-                            name="telefon"
-                            value={formData.telefon}
+                            name="phone"
+                            value={formData.phone}
                             onChange={handleChange}
                             required
                         />
@@ -124,8 +124,8 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                         <input
                             style={{ margin: 0, color: "#000" }}
                             type="email"
-                            name="eposta"
-                            value={formData.eposta}
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
                             required
                         />
@@ -133,7 +133,7 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <label>Cinsiyet: </label>
-                        <select style={{ margin: 0, color: "#000" }} name="cinsiyet" value={formData.cinsiyet} onChange={handleChange} required>
+                        <select style={{ margin: 0, color: "#000" }} name="gender" value={formData.gender} onChange={handleChange} required>
                             <option disabled style={{ display: 'none' }} value="">Seçiniz</option>
                             <option value="erkek">Erkek</option>
                             <option value="kadın">Kadın</option>
@@ -145,8 +145,8 @@ const UserForm = forwardRef<HTMLFormElement, UserFormProps>(({ onChange, sıra, 
                         <input
                             style={{ margin: 0, color: "#000" }}
                             type="date"
-                            name="dogumTarihi"
-                            value={formData.dogumTarihi}
+                            name="birthDate"
+                            value={formData.birthDate}
                             onChange={handleChange}
                             required
                         />
